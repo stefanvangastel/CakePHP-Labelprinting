@@ -27,7 +27,7 @@ This plugin is CakePHP Security component compatible.
 
 **Optional:**
 
-* [Bootstrap](http://getbootstrap.com) (Bootstrap 2 and 3 compatible)
+* [Bootstrap 3](http://getbootstrap.com)
 
 <a name="installation"/>
 ## Installation and Setup
