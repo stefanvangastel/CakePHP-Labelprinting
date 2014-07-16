@@ -1,0 +1,8 @@
+<?php
+$config = array(
+	'Labelprinting' => array(
+	    'printeraddr' => 'localhost',
+	    'description' => 'Printer Foo',
+	  	'port' => 9100,
+	)
+);
