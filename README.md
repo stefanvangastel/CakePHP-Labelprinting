@@ -49,3 +49,13 @@ This plugin is CakePHP Security component compatible.
 2. Load the plugin in app/Config/bootstrap.php:
 
 	`CakePlugin::load('Labelprinting');`
+
+3. Visit http://yoursite.com/labelprinting/example/setup to enter your printer settings
+
+4. Visit http://yoursite.com/labelprinting/example/ to select a template and print some labels
+
+## Labeltemplates
+
+* Labeltemplates can be added, updated and removed in the Labeltemplates directory inside the Plugin. You van use TSPL commands as you can see in the examples. 
+
+* Take a look at the example controller to see what you could do using placeholders (start with <<< and end with >>>).

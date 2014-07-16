@@ -61,6 +61,10 @@ class LabelprinterComponent extends Component {
 		//Send command to printer and read 8 bytes:
 		$result = $this->sendCommand($command,8);
 
+		if(!$result){
+			return $this->printerConnectionStatus();
+		}
+
 		//A hex value is returned: Map to this status array:
 		$statuscodes = array(
 			'00' => 'Normal',
@@ -82,12 +86,54 @@ class LabelprinterComponent extends Component {
 
 		//Check statuscode
 		if( ! isset($statuscodes[$result]) ){
-			return 'Unknown';
+			return 'Unknown / No connection';
 		}
 
 		//Return status
 		return $statuscodes[$result];
 	}
+
+
+	public function getTemplates(){
+
+		//Set array
+		$templates = array();
+
+		//Fetch all .tspl files in template dir:
+		$templatedir = CakePlugin::path('Labelprinting').'Labeltemplates'.DS;
+
+		//Parse templates
+		foreach( glob($templatedir.'*.tspl') as $file){
+
+			$template = array();
+
+			//Templatename
+			$template['name'] = str_replace('.tspl','',basename($file));
+			$template['name'] = Inflector::Humanize($template['name']);
+
+			//Template content:
+			$template['content'] = file_get_contents($file);	
+
+			//Find variables in template:
+			preg_match_all('/<<<(.*?)>>>/', $template['content'], $matches);
+
+			//Unique:
+			$matches[0] = array_unique($matches[0]);
+			$matches[1] = array_unique($matches[1]);
+
+			//Set full matches (or false)
+			$template['variables'] = $matches;
+
+			//Set hash as value
+			$template['hash'] = sha1($template['name']);
+
+			//Add hash of template as key (id)
+			$templates[$template['hash']] = $template;
+		}
+
+		return $templates;
+	}
+
 
 	/**
 	 * Sends a command or multiple commands to the printer
@@ -95,7 +141,7 @@ class LabelprinterComponent extends Component {
 	 * @param  integer $bytestoread Number of bytes to read of result
 	 * @return [type]               [description]
 	 */
-	private function sendCommand($command,$bytestoread = 8192){
+	public function sendCommand($command,$bytestoread = 8192){
 
 		$printeraddr = Configure::read('Labelprinting.printeraddr');
 		$printerport = Configure::read('Labelprinting.port');
@@ -104,12 +150,45 @@ class LabelprinterComponent extends Component {
 		$command .= "\r"; //Use double quotes to interpolate
 
 		//Open socket to printer: TODO: error catching
-		$fp = fsockopen($printeraddr,$printerport);
+		$fp = @fsockopen($printeraddr,$printerport,$errno,$errstr,2); //2 second timeout
 
-		//Write command
-    	fwrite($fp,$command);
+		//Check connection
+		if (!$fp) {
+			//Error
+			return false;
+		} else {
+			//Write command
+	    	fwrite($fp,$command);
+
+    	}
 
     	//Return result and make hex of it first
-  		return bin2hex(fread($fp,$bytestoread)); 
+  		$result = bin2hex(fread($fp,$bytestoread)); 
+
+  		//Close connection
+  		fclose($fp);
+
+  		//Return result
+  		return $result;
 	}
+
+	/**
+	 * Quick connection check
+	 * @return bool/string Connection status
+	 */
+	public function printerConnectionStatus(){
+
+		//Open socket to printer
+		$fp = @fsockopen($printeraddr,$printerport,$errno,$errstr,1); //1 second timeout
+
+		if (!$fp) {
+			//Error
+			return "ERROR: $errno - $errstr";
+		}
+		//Close connection
+  		fclose($fp);
+
+  		return true;
+	}
+
 }
