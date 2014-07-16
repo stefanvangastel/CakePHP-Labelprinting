@@ -1,0 +1,15 @@
+{
+    "name": "stefanvangastel/labelprinting",
+    "description": "Print to a network printer that is TSPL/TSPL2 compatible",
+    "license": "MIT",
+    "type": "cakephp-plugin",
+    "authors": [
+        {
+            "name": "Stefan van Gastel",
+            "email": "stefanvangastel@gmail.com"
+        }
+    ],
+    "require": {
+        "composer/installers": "*"
+    }
+}
