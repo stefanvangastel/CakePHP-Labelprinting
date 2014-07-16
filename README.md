@@ -2,8 +2,7 @@
 * [Intro](#intro)  
 * [Requirements](#requirements)  
 * [Installation and setup](#installation)  
-* [Usage / Demo](#usage) 
-* [Examples](#examples)  
+* [Labeltemplates](#labeltemplates) 
 
 <a name="intro"/>
 ## Intro
@@ -54,6 +53,7 @@ This plugin is CakePHP Security component compatible.
 
 4. Visit http://yoursite.com/labelprinting/example/ to select a template and print some labels
 
+<a name="labeltemplates"/>
 ## Labeltemplates
 
 * Labeltemplates can be added, updated and removed in the Labeltemplates directory inside the Plugin. You van use TSPL commands as you can see in the examples. 
